@@ -2,4 +2,6 @@
 .idea/
 *.db
 **/config-local.yaml
+sqlitecli
+goauth
 
