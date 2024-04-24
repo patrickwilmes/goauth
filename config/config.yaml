@@ -1,5 +1,7 @@
 server:
   address: ":8080"
+security:
+  secretKey:
 mail:
   from: 
   smtp: 

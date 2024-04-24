@@ -23,7 +23,7 @@ func GenerateRandomString(length int) string {
 	return string(s)
 }
 
-var secretKey = []byte("my-secret-key")
+var secretKey = []byte(GetStringValue("security.secretKey"))
 
 func CreateToken(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
