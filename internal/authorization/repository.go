@@ -17,6 +17,15 @@ func newRepository(backend db.DatabaseBackend) *authRepository {
 	return &authRepository{backend: backend}
 }
 
+func (repo authRepository) TokenExists(token string) (bool, error) {
+	var exists bool
+	err := repo.backend.Database().QueryRow("SELECT EXISTS(SELECT 1 FROM logins WHERE jwt=?", token).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
+}
+
 func (repo authRepository) CheckAuthCodeAndChallenge(authCode, challenge string) (bool, error) {
 	var exists bool
 	err := repo.backend.Database().QueryRow("SELECT EXISTS(SELECT 1 FROM logins WHERE challenge=? AND auth_code=?);", challenge, authCode).Scan(&exists)

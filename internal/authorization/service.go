@@ -15,6 +15,7 @@ import (
 type service interface {
 	Login(user User) (*Login, error)
 	GenerateToken(authCode, challenge string) (string, error)
+	IsValidToken(token string) (bool, error)
 }
 
 type repository interface {
@@ -22,6 +23,7 @@ type repository interface {
 	RegisterActiveLoginFlow(user User, authCode string) error
 	CheckAuthCodeAndChallenge(authCode, challenge string) (bool, error)
 	UpdateLoginFlow(authCode, token, challenge string) error
+	TokenExists(token string) (bool, error)
 }
 
 type authService struct {
@@ -30,6 +32,10 @@ type authService struct {
 
 func newInstance(repo repository) service {
 	return &authService{repo: repo}
+}
+
+func (srv authService) IsValidToken(token string) (bool, error) {
+	return srv.repo.TokenExists(token)
 }
 
 func (srv authService) GenerateToken(authCode, challenge string) (string, error) {

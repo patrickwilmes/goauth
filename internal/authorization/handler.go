@@ -8,6 +8,7 @@
 package authorization
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/patrickwilmes/goauth/internal/db"
 	"html/template"
@@ -27,6 +28,7 @@ func InitializeAuthorizationHandler(router *mux.Router, backend *db.DatabaseBack
 	router.Methods("GET").Path("/token").Name("generateToken").HandlerFunc(context.GenerateToken)
 	router.Methods("POST").Path("/login").Name("registerUser").HandlerFunc(context.Login)
 	router.Methods("GET").Path("/login").Name("loginPage").HandlerFunc(context.LoginPage)
+	router.Methods("POST").Path("/token/verify").Name("verifyToken").HandlerFunc(context.VerifyToken)
 }
 
 type loginContext struct {
@@ -34,7 +36,32 @@ type loginContext struct {
 	Challenge   string
 }
 
-// todo - implement token verification as endpoint
+type tokenVerification struct {
+	Token string
+}
+
+func (context authorizationContext) VerifyToken(w http.ResponseWriter, r *http.Request) {
+	var tokenVerification tokenVerification
+	err := json.NewDecoder(r.Body).Decode(&tokenVerification)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	isValid, err := context.service.IsValidToken(tokenVerification.Token)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if !isValid {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	return
+}
 
 func (context authorizationContext) GenerateToken(w http.ResponseWriter, r *http.Request) {
 	authCode := r.FormValue("authCode")
