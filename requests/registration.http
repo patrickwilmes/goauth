@@ -1,0 +1,10 @@
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+  "email": "p.wilmes89@gmail.com",
+  "password": "test123"
+}
+
+###
+GET http://localhost:8080/token?authCode=gX5LwlogTtWSGVgMVNxxSImfFxlb1XHJtj6H5EPbC75OWdWDvivuXLTl7qhJ6zXZp25eSVZTwoQCI8kgafwJ7ZCN8xD1snK6CO4ugllK6kTqy0veAkuMDOvXbl9Phf7Y&challenge=123
