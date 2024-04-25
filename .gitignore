@@ -6,3 +6,5 @@ sqlitecli
 goauth
 keygen
 
+*.sqlite
+
