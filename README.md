@@ -17,6 +17,11 @@ go build ./cmd/goauth
  
 _Tool for generating the secret key for creating a jwt_
 
+**Running**
+```bash
+gcc -o myKeygen keygen.c -lcrypto
+```
+
 ### sqlitecli
 **Dependencies:** sqlite3
 
