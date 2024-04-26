@@ -8,9 +8,10 @@
 package common
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"math/rand"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func GenerateRandomString(length int) string {
@@ -29,7 +30,7 @@ func CreateToken(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"email": email,
-			"exp":   time.Now().Add(time.Hour * 24).Unix(),
+			"exp":   time.Now().Add(time.Minute * time.Duration(GetIntValue("security.jwt.expirationOffsetMins"))).Unix(),
 		})
 	tokenStr, err := token.SignedString(secretKey)
 	if err != nil {
