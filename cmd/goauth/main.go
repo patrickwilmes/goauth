@@ -8,17 +8,22 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/patrickwilmes/goauth/internal/authorization"
 	"github.com/patrickwilmes/goauth/internal/common"
 	"github.com/patrickwilmes/goauth/internal/db"
 	"github.com/patrickwilmes/goauth/internal/registration"
-	"net/http"
 )
 
 const (
 	configServerAddress = "server.address"
 )
+
+func init() {
+	common.InitializeConfiguration()
+}
 
 func configureRouting(backend *db.DatabaseBackend) *mux.Router {
 	router := mux.NewRouter()
@@ -28,7 +33,6 @@ func configureRouting(backend *db.DatabaseBackend) *mux.Router {
 }
 
 func main() {
-	common.InitializeConfiguration()
 	dbBackend, err := db.CreateDatabaseBackend()
 	common.PanicOnError(err)
 
