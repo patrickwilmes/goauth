@@ -5,7 +5,10 @@ security:
   jwt:
     expirationOffsetMins:
 mail:
-  from: 
-  smtp: 
+  from:
+  smtp:
   port:
-  password: 
+  password:
+database:
+  driverName: sqlite3
+  url: auth.db

@@ -7,10 +7,32 @@
 
 package db
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+	"github.com/patrickwilmes/goauth/internal/common"
+	"log"
+)
+
+const (
+	dbDriverName string = "database.driverName"
+	dbUrl        string = "database.url"
+)
 
 type DatabaseBackend interface {
 	Exec(sql string) error
 	Database() *sql.DB
 	Close() error
+}
+
+func CreateDatabaseBackend() (DatabaseBackend, error) {
+	driverName := common.GetStringValue(dbDriverName)
+	url := common.GetStringValue(dbUrl)
+
+	if driverName == "sqlite3" {
+		return New(driverName, url)
+	} else {
+		log.Printf("an unsupported database driver %s is configured", driverName)
+		return nil, errors.New("unsupported database driver configured")
+	}
 }

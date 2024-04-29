@@ -13,11 +13,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const (
-	file       string = "auth.db"
-	driverName string = "sqlite3"
-)
-
 // table definitions
 const (
 	// Stores all users that should have access to the backend system.
@@ -61,8 +56,8 @@ type SqliteBackend struct {
 	DB *sql.DB
 }
 
-func New() (DatabaseBackend, error) {
-	db, err := sql.Open(driverName, file)
+func New(driverName, url string) (DatabaseBackend, error) {
+	db, err := sql.Open(driverName, url)
 	if err != nil {
 		return nil, err
 	}

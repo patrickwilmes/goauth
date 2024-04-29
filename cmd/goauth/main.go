@@ -28,14 +28,14 @@ func configureRouting(backend *db.DatabaseBackend) *mux.Router {
 }
 
 func main() {
-	dbBackend, err := db.New()
+	common.InitializeConfiguration()
+	dbBackend, err := db.CreateDatabaseBackend()
 	common.PanicOnError(err)
 
 	defer func() {
 		common.PanicOnError(dbBackend.Close())
 	}()
 
-	common.InitializeConfiguration()
 	router := configureRouting(&dbBackend)
 	serverAddress := common.GetStringValue(configServerAddress)
 	err = http.ListenAndServe(serverAddress, router)
