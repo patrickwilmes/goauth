@@ -9,12 +9,14 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/patrickwilmes/goauth/internal/authorization"
 	"github.com/patrickwilmes/goauth/internal/common"
 	"github.com/patrickwilmes/goauth/internal/db"
 	"github.com/patrickwilmes/goauth/internal/registration"
+	"github.com/rs/zerolog"
 )
 
 const (
@@ -33,6 +35,18 @@ func configureRouting(backend *db.DatabaseBackend) *mux.Router {
 }
 
 func main() {
+	logFile, _ := os.OpenFile(
+		"application.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0664,
+	)
+
+	defer logFile.Close()
+
+	multi := zerolog.MultiLevelWriter(os.Stdout, logFile)
+	logger := zerolog.New(multi).With().Timestamp().Logger()
+
+	logger.Info().Msg("Booting server ...")
 	dbBackend, err := db.CreateDatabaseBackend()
 	common.PanicOnError(err)
 

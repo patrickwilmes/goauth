@@ -7,8 +7,11 @@
 
 package common
 
+import "github.com/rs/zerolog/log"
+
 func PanicOnError(err error) {
 	if err != nil {
+		log.Error().Stack().Err(err).Msg("")
 		panic(err)
 	}
 }
