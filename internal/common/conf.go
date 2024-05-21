@@ -22,6 +22,7 @@ const (
 // InitializeConfiguration we initially need to tell viper how to access the configuration
 // which type the configuration is of, and where it's located.
 func InitializeConfiguration() {
+	viper.AutomaticEnv()
 	viper.SetConfigType(configType)
 	viper.AddConfigPath(primaryConfigLocation)
 	viper.AddConfigPath(secondaryConfigLocation)
