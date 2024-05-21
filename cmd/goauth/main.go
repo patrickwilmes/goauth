@@ -37,7 +37,7 @@ func main() {
 
 	logger := common.GetLogger()
 	logger.Info().Msg("Booting server ...")
-	dbBackend, err := db.CreateDatabaseBackend()
+	dbBackend, err := db.NewDBBackend()
 	common.PanicOnError(err)
 
 	defer func() {

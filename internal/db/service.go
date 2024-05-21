@@ -15,8 +15,14 @@ import (
 )
 
 const (
-	dbDriverName string = "database.driverName"
-	dbUrl        string = "database.url"
+	dbDriverName     string = "database.driverName"
+	dbUrl            string = "database.url"
+	sqliteDriverName string = "sqlite3"
+	noDriver         string = "noDriver"
+)
+
+var (
+	errorUnsupportedDBDriver = errors.New("unsupported database driver configured")
 )
 
 type DatabaseBackend interface {
@@ -25,14 +31,21 @@ type DatabaseBackend interface {
 	Close() error
 }
 
-func CreateDatabaseBackend() (DatabaseBackend, error) {
+func NewDBBackend() (DatabaseBackend, error) {
 	driverName := common.GetStringValue(dbDriverName)
 	url := common.GetStringValue(dbUrl)
-
-	if driverName == "sqlite3" {
-		return New(driverName, url)
+	dbFactories := map[string]func() (DatabaseBackend, error){
+		sqliteDriverName: func() (DatabaseBackend, error) {
+			return New(driverName, url)
+		},
+		noDriver: func() (DatabaseBackend, error) {
+			log.Printf("an unsupported database driver %s is configured", driverName)
+			return nil, errorUnsupportedDBDriver
+		},
+	}
+	if val, present := dbFactories[driverName]; present {
+		return val()
 	} else {
-		log.Printf("an unsupported database driver %s is configured", driverName)
-		return nil, errors.New("unsupported database driver configured")
+		return dbFactories[noDriver]()
 	}
 }
