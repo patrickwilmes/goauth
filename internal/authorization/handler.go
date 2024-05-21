@@ -71,7 +71,12 @@ func (context authorizationContext) GenerateToken(w http.ResponseWriter, r *http
 		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte(token))
+	_, err = w.Write([]byte(token))
+	if err != nil {
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func (context authorizationContext) Login(w http.ResponseWriter, r *http.Request) {

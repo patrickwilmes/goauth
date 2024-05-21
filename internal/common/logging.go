@@ -1,6 +1,7 @@
 package common
 
 import (
+	"log"
 	"os"
 
 	"github.com/rs/zerolog"
@@ -23,5 +24,8 @@ func GetLogger() zerolog.Logger {
 }
 
 func CloseLogging() {
-	file.Close()
+	err := file.Close()
+	if err != nil {
+		log.Fatalf("Failed to close file handle for logger: %v", err)
+	}
 }
