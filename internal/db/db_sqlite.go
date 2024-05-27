@@ -43,11 +43,12 @@ const (
 	// into the table column INVAL_DATE, to simplify check for now.
 	logins = `
 		CREATE TABLE IF NOT EXISTS logins (
-			email 		TEXT NOT NULL PRIMARY KEY,
-			challenge 	TEXT NOT NULL,
-			auth_code 	TEXT NOT NULL,
-		    jwt			TEXT,
-			inval_date 	TEXT
+			email 				TEXT NOT NULL PRIMARY KEY,
+			challenge 			TEXT NOT NULL,
+			challenge_method 	TEXT NOT NULL,
+			auth_code 			TEXT NOT NULL,
+		    jwt					TEXT,
+			inval_date 			TEXT
 		);
 	`
 )

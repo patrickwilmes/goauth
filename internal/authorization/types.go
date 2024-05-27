@@ -8,9 +8,10 @@
 package authorization
 
 type User struct {
-	email     string
-	password  string
-	challenge string
+	email           string
+	password        string
+	challenge       string
+	challengeMethod string
 }
 
 type Login struct {

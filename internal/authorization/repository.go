@@ -47,7 +47,7 @@ func (repo authRepository) GetUserByMail(mail string) (User, error) {
 }
 
 func (repo authRepository) RegisterActiveLoginFlow(user User, authCode string) error {
-	_, err := repo.backend.Database().Exec("INSERT INTO logins (email, auth_code, challenge) VALUES (?, ?, ?)", user.email, authCode, user.challenge)
+	_, err := repo.backend.Database().Exec("INSERT INTO logins (email, auth_code, challenge, challenge_method) VALUES (?, ?, ?, ?)", user.email, authCode, user.challenge, user.challengeMethod)
 	if err != nil {
 		return err
 	}

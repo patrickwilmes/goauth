@@ -9,10 +9,11 @@ package authorization
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/patrickwilmes/goauth/internal/db"
 	"html/template"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/patrickwilmes/goauth/internal/db"
 )
 
 type authorizationContext struct {
@@ -32,8 +33,9 @@ func InitializeAuthorizationHandler(router *mux.Router, backend *db.DatabaseBack
 }
 
 type loginContext struct {
-	RedirectUrl string
-	Challenge   string
+	RedirectUrl     string
+	Challenge       string
+	ChallengeMethod string
 }
 
 type tokenVerification struct {
@@ -86,9 +88,10 @@ func (context authorizationContext) Login(w http.ResponseWriter, r *http.Request
 	}
 	redirectUrl := r.FormValue("redirect_url")
 	user := User{
-		email:     r.FormValue("email"),
-		password:  r.FormValue("password"),
-		challenge: r.FormValue("challenge"),
+		email:           r.FormValue("email"),
+		password:        r.FormValue("password"),
+		challenge:       r.FormValue("challenge"),
+		challengeMethod: r.FormValue("challenge_method"),
 	}
 	login, err := context.service.Login(user)
 	if err != nil {
@@ -105,8 +108,9 @@ func (context authorizationContext) Login(w http.ResponseWriter, r *http.Request
 
 func (context authorizationContext) LoginPage(w http.ResponseWriter, r *http.Request) {
 	ctx := loginContext{
-		RedirectUrl: r.URL.Query().Get("redirect_url"),
-		Challenge:   r.URL.Query().Get("challenge"),
+		RedirectUrl:     r.URL.Query().Get("redirect_url"),
+		Challenge:       r.URL.Query().Get("challenge"),
+		ChallengeMethod: r.URL.Query().Get("challenge_method"),
 	}
 	tpl, err := template.ParseFiles("templates/login.html")
 	if err != nil {
